@@ -276,6 +276,7 @@ set(FIRMWARE_SRC
   targets/common/arm/stm32/ads79xx.cpp
   targets/common/arm/stm32/sdio_sd.cpp
   targets/common/arm/stm32/diskio_sdio.cpp
+  targets/common/arm/stm32/dma2d.cpp
   )
 
 if(BOOTLOADER)
@@ -305,5 +306,4 @@ set(STM32LIB_SRC
   STM32F4xx_StdPeriph_Driver/src/stm32f4xx_fmc.c
   STM32F4xx_StdPeriph_Driver/src/stm32f4xx_ltdc.c
   STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c
-  STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma2d.c
   )
