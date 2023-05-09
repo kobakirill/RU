@@ -1056,6 +1056,7 @@
   #define TR_TIMER_SOURCE              "Timer source"
   #define TR_SIZE                      "Taille"
   #define TR_SHADOW                    "Shadow"
+  #define TR_ALIGNMENT                 "Aligner"
   #define TR_ALIGN_LABEL               "Aligner le label"
   #define TR_ALIGN_VALUE               "Aligner la valeur"
   #define TR_ALIGN_OPTS                { "Gauche", "Centre", "Droite" }

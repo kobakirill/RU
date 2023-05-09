@@ -1051,6 +1051,7 @@
   #define TR_TIMER_SOURCE              "Timer source"
   #define TR_SIZE                      "Size"
   #define TR_SHADOW                    "Shadow"
+  #define TR_ALIGNMENT                 "Kohdistus"
   #define TR_ALIGN_LABEL               "Kohdista merkki"
   #define TR_ALIGN_VALUE               "Kohdista arvo"
   #define TR_ALIGN_OPTS                { "Vasen", "Keski", "Oikea" }
