@@ -1250,9 +1250,6 @@ void menuModelSetup(event_t event)
                                   MODULE_SUBTYPE_R9M_LAST, EE_MODEL);
                   if (checkIncDec_Ret) {
                     g_model.moduleData[moduleIdx].pxx.power = 0;
-                    g_model.moduleData[moduleIdx].channelsStart = 0;
-                    g_model.moduleData[moduleIdx].channelsCount =
-                        defaultModuleChannels_M8(moduleIdx);
                   }
                 } else {
                   CHECK_INCDEC_MODELVAR(event,
@@ -1264,6 +1261,8 @@ void menuModelSetup(event_t event)
                   g_model.moduleData[moduleIdx].channelsStart = 0;
                   g_model.moduleData[moduleIdx].channelsCount =
                       defaultModuleChannels_M8(moduleIdx);
+
+                  pulsesModuleSettingsUpdate(moduleIdx);
                 }
             }
           }
