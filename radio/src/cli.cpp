@@ -1117,7 +1117,7 @@ int cliSerialPassthrough(const char **argv)
       params.baudrate = baudrate;
 
       spInternalModuleState = modulePortInitSerial(port_n, ETX_MOD_PORT_UART,
-                                                    &params);
+                                                   &params, false);
 
       auto drv = modulePortGetSerialDrv(spInternalModuleState->rx);
       auto ctx = modulePortGetCtx(spInternalModuleState->rx);

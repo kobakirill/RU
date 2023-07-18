@@ -188,9 +188,6 @@ static void* ppmMLinkInit(uint8_t module) {
   if (!mod_st) 
     return nullptr;
 
-  if (!modulePortInitSerial(module, ETX_MOD_PORT_UART, &ppmMLinkSerialParams)) {
-      modulePortInitSerial(module, ETX_MOD_PORT_SPORT_INV, &ppmMLinkSerialParams);
-  }
-
+  modulePortInitSerial(module, ETX_MOD_PORT_SPORT, &ppmMLinkSerialParams, true);
   return (void*)mod_st;
 }
