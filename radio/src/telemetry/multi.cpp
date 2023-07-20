@@ -85,6 +85,11 @@ MultiModuleStatus &getMultiModuleStatus(uint8_t module)
   return multiModuleStatus[module];
 }
 
+static uint8_t _getMultiStatusModuleIdx(const MultiModuleStatus* p)
+{
+  return p - multiModuleStatus;
+}
+
 uint8_t getMultiBindStatus(uint8_t module)
 {
   return multiBindStatus[module];
@@ -121,6 +126,11 @@ static uint16_t multiTelemetryLastRxTS;
 MultiModuleStatus& getMultiModuleStatus(uint8_t)
 {
   return multiModuleStatus;
+}
+
+static uint8_t _getMultiStatusModuleIdx(const MultiModuleStatus*)
+{
+  return EXTERNAL_MODULE;
 }
 
 uint8_t getMultiBindStatus(uint8_t)
@@ -504,8 +514,7 @@ static void processMultiTelemetryPaket(const uint8_t * packet, uint8_t module)
 void MultiModuleStatus::getStatusString(char * statusText) const
 {
   if (!isValid()) {
-    uint8_t module = (uint8_t)(this - &getMultiModuleStatus(0));
-    if (!modulePortIsPortUsedByModule(module, ETX_MOD_PORT_SPORT)) {
+    if (!modulePortIsPortUsedByModule(getModuleIndex(), ETX_MOD_PORT_SPORT)) {
       strcpy(statusText, STR_DISABLE_INTERNAL);
     } else {
       strcpy(statusText, STR_MODULE_NO_TELEMETRY);
@@ -559,6 +568,10 @@ void MultiModuleStatus::getStatusString(char * statusText) const
       *(tmp + 4) = '\0';
     }
   }
+}
+
+uint8_t MultiModuleStatus::getModuleIndex() const {
+  return _getMultiStatusModuleIdx(this);
 }
 
 static void processMultiTelemetryByte(const uint8_t data, uint8_t module)
