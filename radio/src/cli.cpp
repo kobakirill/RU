@@ -25,7 +25,7 @@
 #include "opentx.h"
 #include "diskio.h"
 #include "timers_driver.h"
-#include "watchdog_driver.h"
+#include "hal/watchdog_driver.h"
 
 #if defined(BLUETOOTH)
 #include "bluetooth_driver.h"

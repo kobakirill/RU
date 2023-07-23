@@ -24,7 +24,7 @@
 #include "theme_manager.h"
 #include "libopenui.h"
 
-#include "watchdog_driver.h"
+#include "hal/watchdog_driver.h"
 
 coord_t drawStringWithIndex(BitmapBuffer * dc, coord_t x, coord_t y, const char * str, int idx, LcdFlags flags, const char * prefix, const char * suffix)
 {
@@ -180,7 +180,7 @@ void drawShutdownAnimation(uint32_t duration, uint32_t totalDuration,
 
 void drawFatalErrorScreen(const char * message)
 {
-  backlightEnable(100);
+  backlightEnable(BACKLIGHT_LEVEL_MAX);
   lcdInitDirectDrawing();
   lcd->clear(COLOR2FLAGS(BLACK));
   lcd->drawText(LCD_W/2, LCD_H/2-20, message, FONT(XL)|CENTERED|COLOR2FLAGS(WHITE));

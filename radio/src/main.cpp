@@ -20,7 +20,9 @@
  */
 
 #include "opentx.h"
+
 #include "hal/adc_driver.h"
+#include "hal/abnormal_reboot.h"
 
 #if defined(LIBOPENUI)
   #include "libopenui.h"
@@ -279,7 +281,7 @@ void checkEeprom()
 {
 #if defined(RTC_BACKUP_RAM) && !defined(SIMU)
   if (TIME_TO_BACKUP_RAM()) {
-    if (!globalData.unexpectedShutdown) {
+    if (!UNEXPECTED_SHUTDOWN()) {
       rambackupWrite();
     }
     rambackupDirtyMsk = 0;
@@ -523,18 +525,14 @@ void perMain()
     mainRequestFlags &= ~(1u << REQUEST_FLIGHT_RESET);
   }
 
-  checkBacklight();
-
-#if !defined(LIBOPENUI)
-  event_t evt = getEvent();
-#endif
-
 #if defined(RTC_BACKUP_RAM)
-  if (globalData.unexpectedShutdown) {
+  if (UNEXPECTED_SHUTDOWN()) {
     drawFatalErrorScreen(STR_EMERGENCY_MODE);
     return;
   }
 #endif
+
+  checkBacklight();
 
   if ((!usbPlugged() || (getSelectedUsbMode() == USB_UNSELECTED_MODE))
       && SD_CARD_PRESENT() && !sdMounted()) {
@@ -544,7 +542,7 @@ void perMain()
 #if !defined(EEPROM)
   // In case the SD card is removed during the session
   if ((!usbPlugged() || (getSelectedUsbMode() == USB_UNSELECTED_MODE))
-      && !SD_CARD_PRESENT() && !globalData.unexpectedShutdown) {
+      && !SD_CARD_PRESENT() && !UNEXPECTED_SHUTDOWN()) {
 
     // TODO: implement for b/w
 #if defined(COLORLCD)
@@ -572,7 +570,11 @@ void perMain()
 #if defined(MULTIMODULE)
   checkFailsafeMulti();
 #endif
-  
+
+#if !defined(LIBOPENUI)
+  event_t evt = getEvent();
+#endif
+
 #if defined(KEYS_GPIO_REG_BIND) && defined(BIND_KEY)
   bindButtonHandler(evt);
 #endif

@@ -25,7 +25,7 @@
 #include "opentx.h"
 #include "libopenui.h"
 
-#include "watchdog_driver.h"
+#include "hal/watchdog_driver.h"
 
 static Window* _get_parent()
 {
