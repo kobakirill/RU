@@ -1327,6 +1327,11 @@ static const char* const _func_sound_lookup[] = {
   "SciF","Robt","Chrp","Tada","Crck","Alrm"
 };
 
+static const char* const _func_rgbled_lookup[] = {
+    "LUA","White","Blue","Red","Yellow",
+    "Green"
+};
+
 static const char* const _adjust_gvar_mode_lookup[] = {
   "Cst", "Src", "GVar", "IncDec"
 };
@@ -1421,6 +1426,16 @@ static void r_customFn(void* user, uint8_t* data, uint32_t bitoffs,
     // find "," and cut val_len
     for (unsigned i=0; i < DIM(_func_sound_lookup); i++) {
       if (!strncmp(_func_sound_lookup[i],val,l_sep)) {
+        CFN_PARAM(cfn) = i;
+        break;
+      }
+    }
+    break;
+
+  case FUNC_RGB_LED:
+    // find "," and cut val_len
+    for (unsigned i=0; i < DIM(_func_rgbled_lookup); i++) {
+      if (!strncmp(_func_rgbled_lookup[i],val,l_sep)) {
         CFN_PARAM(cfn) = i;
         break;
       }
@@ -1630,6 +1645,12 @@ static bool w_customFn(void* user, uint8_t* data, uint32_t bitoffs,
   case FUNC_PLAY_SOUND:
     // Bp1,Bp2,Bp3,Wrn1,Wrn2,Chee,Rata,Tick,Sirn,Ring,SciF,Robt,Chrp,Tada,Crck,Alrm
     str = _func_sound_lookup[CFN_PARAM(cfn)];
+    if (!wf(opaque, str, strlen(str))) return false;
+    break;
+
+  case FUNC_RGB_LED:
+    // Lua, WHite, Blue, Red, Yellow, Green
+    str = _func_rgbled_lookup[CFN_PARAM(cfn)];
     if (!wf(opaque, str, strlen(str))) return false;
     break;
 
