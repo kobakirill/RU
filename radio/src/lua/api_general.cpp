@@ -2776,9 +2776,9 @@ static int luaGetTrainerStatus(lua_State * L)
   return 1;
 }
 
-#if defined(LED_STRIP_GPIO) \
+#if defined(LED_STRIP_GPIO)
 /*luadoc
-@function setRgbLedColor(id, rvalue, bvalue, cvalue)
+@function setRGBLedColor(id, rvalue, bvalue, cvalue)
 
 @param id: integer identifying a led in the led chain
 
@@ -2788,7 +2788,7 @@ static int luaGetTrainerStatus(lua_State * L)
 
 @param bvalue: interger, value of blue channel
 
-@status current Introduced in 2.9
+@status current Introduced in 2.10
 */
 
 static int luaSetRgbLedColor(lua_State * L)
@@ -2802,6 +2802,23 @@ static int luaSetRgbLedColor(lua_State * L)
 
   return 1;
 }
+
+/*luadoc
+@function applyRGBLedColors()
+
+ Apply RGB led colors previously defined by setRGBLedColor
+
+@status current Introduced in 2.10
+*/
+
+static int luaApplyRGBLedColors(lua_State * L)
+{
+
+  rgbLedColorApply();
+
+  return 1;
+}
+
 #endif
 
 #define KEY_EVENTS(xxx, yyy)                                    \
@@ -2891,7 +2908,8 @@ LROT_BEGIN(etxlib, NULL, 0)
   LROT_FUNCENTRY( getSourceName, luaGetSourceName )
   LROT_FUNCENTRY( sources, luaSources )
 #if defined(LED_STRIP_GPIO)
-  LROT_FUNCENTRY(setRgbLedColor, luaSetRgbLedColor )
+  LROT_FUNCENTRY(setRGBLedColor, luaSetRgbLedColor )
+  LROT_FUNCENTRY(applyRGBLedColors, luaApplyRGBLedColors )
 #endif
 LROT_END(etxlib, NULL, 0)
 
