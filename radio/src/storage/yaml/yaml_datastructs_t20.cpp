@@ -81,6 +81,7 @@ const struct YamlIdStr enum_Functions[] = {
   {  FUNC_BACKLIGHT, "BACKLIGHT"  },
   {  FUNC_SCREENSHOT, "SCREENSHOT"  },
   {  FUNC_RACING_MODE, "RACING_MODE"  },
+  {  FUNC_TEST, "TEST"  },
   {  0, NULL  }
 };
 const struct YamlIdStr enum_TimerModes[] = {

@@ -596,10 +596,12 @@ enum Functions {
   FUNC_DISABLE_TOUCH,
   FUNC_SET_SCREEN,
 #endif
+  FUNC_TEST, // MUST remain last
 #if defined(DEBUG)
-  FUNC_TEST,  // should remain the last before MAX as not added in Companion
-#endif
   FUNC_MAX SKIP
+#else
+  FUNC_MAX SKIP = FUNC_TEST - 1
+#endif
 };
 
 enum TimerModes {
