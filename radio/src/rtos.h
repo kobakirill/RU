@@ -203,7 +203,7 @@ inline void RTOS_CREATE_TASK(pthread_t &taskId, void * (*task)(void *), const ch
   
   static inline void _RTOS_CREATE_MUTEX(RTOS_MUTEX_HANDLE* h)
   {
-    h->rtos_handle = xSemaphoreCreateBinaryStatic(&h->mutex_struct);
+    h->rtos_handle = xSemaphoreCreateMutexStatic(&h->mutex_struct);
     xSemaphoreGive(h->rtos_handle);
   }
 
