@@ -92,12 +92,39 @@ static void setupPulsesSbus(uint8_t module, uint8_t*& p_buf)
 
 #define SBUS_BAUDRATE 100000
 
-const etx_serial_init sbusUartParams = {
+static const etx_serial_init sbusUartParams = {
     .baudrate = SBUS_BAUDRATE,
     .encoding = ETX_Encoding_8E2,
     .direction = ETX_Dir_TX,
     .polarity = ETX_Pol_Normal,
 };
+
+static const etx_serial_init sbusSportSerialParams = {
+    .baudrate = FRSKY_SPORT_BAUDRATE,
+    .encoding = ETX_Encoding_8N1,
+    .direction = ETX_Dir_RX,
+    .polarity = ETX_Pol_Normal,
+};
+
+typedef void (*ppm_telemetry_fct_t)(uint8_t module, uint8_t data, uint8_t* buffer, uint8_t& len);
+static ppm_telemetry_fct_t _processTelemetryData;
+
+static void sbusProcessData(void* ctx, uint8_t data, uint8_t* buffer, uint8_t* len)
+{
+  auto mod_st = (etx_module_state_t*)ctx;
+  auto module = modulePortGetModule(mod_st);
+
+  processFrskySportTelemetryData(module, data, buffer, *len);
+}
+
+static void sbusInitSportTelemetry(uint8_t module)
+{
+  _processTelemetryData = nullptr;
+
+  if (modulePortInitSerial(module, ETX_MOD_PORT_SPORT, &sbusSportSerialParams) != nullptr) {
+    _processTelemetryData = processFrskySportTelemetryData;
+  }
+}
 
 static void* sbusInit(uint8_t module)
 {
@@ -114,7 +141,9 @@ static void* sbusInit(uint8_t module)
   if (!mod_st) return nullptr;
   // }
 
+  sbusInitSportTelemetry(module);
   mixerSchedulerSetPeriod(module, SBUS_PERIOD(module));
+  
   return (void*)mod_st;
 }
 
@@ -122,6 +151,7 @@ static void sbusDeInit(void* ctx)
 {
   auto mod_st = (etx_module_state_t*)ctx;
   modulePortDeInit(mod_st);
+  _processTelemetryData = nullptr;
 }
 
 static void sbusSendPulses(void* ctx, uint8_t* buffer, int16_t* channels, uint8_t nChannels)
@@ -149,10 +179,19 @@ static void sbusSendPulses(void* ctx, uint8_t* buffer, int16_t* channels, uint8_
   mixerSchedulerSetPeriod(module, SBUS_PERIOD(module));
 }
 
+static void sbusProcessTelemetryData(void* ctx, uint8_t data, uint8_t* buffer, uint8_t* len) {
+  auto mod_st = (etx_module_state_t*)ctx;
+  auto module = modulePortGetModule(mod_st);
+
+  if (_processTelemetryData) {
+    _processTelemetryData(module, data, buffer, *len);
+  }
+}
+
 const etx_proto_driver_t SBusDriver = {
   .protocol = PROTOCOL_CHANNELS_SBUS,
   .init = sbusInit,
   .deinit = sbusDeInit,
   .sendPulses = sbusSendPulses,
-  .processData = nullptr,
+  .processData = sbusProcessTelemetryData,
 };
